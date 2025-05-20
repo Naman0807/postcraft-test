@@ -41,20 +41,16 @@ const AuthPage = () => {
 
 	const handleSignUp = async (e: React.FormEvent) => {
 		e.preventDefault();
-
 		if (!email || !password || !fullName) {
-			toast({
-				title: "Missing Information",
+			toast.error("Missing Information", {
 				description: "Please fill out all fields to sign up.",
-				variant: "destructive",
 			});
 			return;
 		}
-
 		try {
 			setLoading(true);
 
-			const { error } = await supabase.auth.signUp({
+			const { data, error } = await supabase.auth.signUp({
 				email,
 				password,
 				options: {
@@ -63,19 +59,51 @@ const AuthPage = () => {
 					},
 				},
 			});
-
 			if (error) throw error;
 
-			toast({
-				title: "Registration successful!",
+			console.log("Sign up successful, user ID:", data?.user?.id); // Create a new profile for the user
+			if (data?.user) {
+				try {
+					console.log("Creating profile for new user:", data.user.id);
+
+					// Handle profile creation in the client
+					// Since we need to wait for the login process to complete
+					// before we can create the profile
+					setTimeout(() => {
+						// Store profile data in local storage temporarily
+						localStorage.setItem(
+							"pendingProfileCreation",
+							JSON.stringify({
+								id: data.user.id,
+								email: email,
+								full_name: fullName,
+								is_subscribed: false,
+								remaining_free_posts: 3,
+							})
+						);
+
+						console.log("Profile data stored for later creation");
+					}, 500);
+				} catch (profileCreationError) {
+					console.error(
+						"Profile creation preparation failed:",
+						profileCreationError
+					);
+				}
+			}
+			toast.success("Registration successful!", {
 				description: "Please check your email to confirm your account.",
 			});
+
+			// If auto-confirm is enabled (for development), navigate to the login tab
+			if (data?.session) {
+				setIsSubscribed(false);
+				setRemainingFreePosts(3);
+				navigate("/");
+			}
 		} catch (error: any) {
-			toast({
-				title: "Error",
-				description: error.message || "An error occurred during sign up.",
-				variant: "destructive",
-			});
+			console.error("Sign up error:", error);
+			toast.error(error.message || "An error occurred during sign up.");
 		} finally {
 			setLoading(false);
 		}
@@ -83,44 +111,86 @@ const AuthPage = () => {
 
 	const handleSignIn = async (e: React.FormEvent) => {
 		e.preventDefault();
-
 		if (!email || !password) {
-			toast({
-				title: "Missing Information",
+			toast.error("Missing Information", {
 				description: "Please enter your email and password.",
-				variant: "destructive",
 			});
 			return;
 		}
 
 		try {
 			setLoading(true);
+			console.log("Signing in with:", email);
 
-			const { error } = await supabase.auth.signInWithPassword({
+			const { data, error } = await supabase.auth.signInWithPassword({
 				email,
 				password,
 			});
 
-			if (error) throw error;
-
-			// Fetch user profile to get subscription status and remaining posts
-			const { data: profile } = await supabase
-				.from("profiles")
-				.select("is_subscribed, remaining_free_posts")
-				.single();
-
-			if (profile) {
-				setIsSubscribed(profile.is_subscribed);
-				setRemainingFreePosts(profile.remaining_free_posts);
+			if (error) {
+				console.error("Sign in API error:", error);
+				throw error;
 			}
+			console.log("Sign in successful, user:", data?.user?.id);
 
-			navigate("/");
+			try {
+				if (!data?.user?.id) {
+					console.error("No user ID available after sign in");
+					throw new Error("Authentication succeeded but no user ID was found");
+				}
+
+				// Fetch user profile to get subscription status and remaining posts
+				const { data: profile, error: profileError } = await supabase
+					.from("profiles")
+					.select("is_subscribed, remaining_free_posts")
+					.eq("id", data.user.id) // Use the user ID from the sign in result
+					.single();
+
+				if (profileError) {
+					console.error("Profile fetch error:", profileError);
+					// If the profile doesn't exist, create one
+					if (profileError.code === "PGRST116") {
+						console.log(
+							"Profile not found, creating new profile for:",
+							data.user.id
+						);
+
+						// Create a new profile
+						const { error: insertError } = await supabase
+							.from("profiles")
+							.insert({
+								id: data.user.id,
+								email: email,
+								full_name: data.user.user_metadata?.full_name || "User",
+								is_subscribed: false,
+								remaining_free_posts: 3,
+							});
+
+						if (insertError) {
+							console.error("Profile creation error:", insertError);
+						} else {
+							console.log("Profile created successfully during sign in");
+							setIsSubscribed(false);
+							setRemainingFreePosts(3);
+						}
+					}
+				} else if (profile) {
+					console.log("Found existing profile:", profile);
+					setIsSubscribed(profile.is_subscribed);
+					setRemainingFreePosts(profile.remaining_free_posts);
+				} // Wait briefly to ensure state is updated before navigation
+				setTimeout(() => {
+					console.log("Navigating to homepage after successful login");
+					navigate("/", { replace: true });
+				}, 300);
+			} catch (profileError: any) {
+				console.error("Error in profile handling:", profileError);
+				// Still navigate even if there's a profile error
+				navigate("/");
+			}
 		} catch (error: any) {
-			toast({
-				title: "Error",
-				description: error.message || "An error occurred during sign in.",
-				variant: "destructive",
-			});
+			console.error("Sign in error:", error);
+			toast.error(error.message || "An error occurred during sign in.");
 		} finally {
 			setLoading(false);
 		}

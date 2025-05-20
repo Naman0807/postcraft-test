@@ -17,19 +17,15 @@ const SettingsPage = () => {
 
 	const handleSaveKey = async () => {
 		if (!newApiKey) {
-			toast({
-				title: "API Key Required",
+			toast.error("API Key Required", {
 				description: "Please enter your OpenAI API key.",
-				variant: "destructive",
 			});
 			return;
 		}
 
 		if (!newApiKey.startsWith("sk-")) {
-			toast({
-				title: "Invalid API Key",
+			toast.error("Invalid API Key", {
 				description: "Please enter a valid OpenAI API key starting with 'sk-'.",
-				variant: "destructive",
 			});
 			return;
 		}
@@ -41,18 +37,15 @@ const SettingsPage = () => {
 			setTimeout(() => {
 				setApiKey(newApiKey);
 				setSaveLoading(false);
-				toast({
-					title: "API Key Saved",
+				toast.success("API Key Saved", {
 					description: "Your OpenAI API key has been saved successfully.",
 				});
 			}, 1000);
 		} catch (error) {
 			console.error("Error saving API key:", error);
 			setSaveLoading(false);
-			toast({
-				title: "Error",
+			toast.error("Error", {
 				description: "Failed to save API key. Please try again.",
-				variant: "destructive",
 			});
 		}
 	};

@@ -7,6 +7,7 @@ interface PostGenerationOptions {
 	topic: string;
 	tone?: string;
 	details?: string;
+	maxLength?: number;
 }
 
 interface ImageGenerationOptions {
@@ -26,6 +27,7 @@ export const usePostGeneration = () => {
 		topic,
 		tone = "professional",
 		details = "",
+		maxLength = 250,
 	}: PostGenerationOptions) => {
 		if (!canGeneratePost()) {
 			toast.error("No remaining posts available", {
@@ -46,7 +48,12 @@ export const usePostGeneration = () => {
 
 		try {
 			const client = getOpenAIClient(apiKey);
-			const content = await client.generatePost(topic, tone, details);
+			const content = await client.generatePost(
+				topic,
+				tone,
+				details,
+				maxLength
+			);
 
 			// Decrement remaining posts if not subscribed
 			if (!isSubscribed) {

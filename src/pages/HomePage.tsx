@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAppContext } from "@/contexts/AppContext";
 
 const HomePage = () => {
-	const { apiKey } = useAppContext();
+	const { apiKey, session, user } = useAppContext();
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		// Add a small delay to ensure authentication state is stable
+		const timer = setTimeout(() => {
+			setIsLoading(false);
+		}, 500);
+
+		return () => clearTimeout(timer);
+	}, []);
+
+	if (isLoading) {
+		return (
+			<div className="min-h-[calc(100vh-144px)] flex items-center justify-center">
+				<div className="text-center">
+					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+					<p className="mt-4">Loading...</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="min-h-[calc(100vh-144px)] flex flex-col">

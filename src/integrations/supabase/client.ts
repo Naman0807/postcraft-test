@@ -13,6 +13,7 @@ export const supabase = createClient<Database>(
 			persistSession: true,
 			autoRefreshToken: true,
 			storageKey: "postcraft-auth-token",
+			debug: true, // Enable debugging
 		},
 	}
 );

@@ -47,10 +47,8 @@ const PricingPage = () => {
 			}
 		} catch (error) {
 			console.error("Error starting checkout:", error);
-			toast({
-				title: "Error",
+			toast.error("Error", {
 				description: "Failed to start checkout process. Please try again.",
-				variant: "destructive",
 			});
 		} finally {
 			setIsLoading({ ...isLoading, [tier]: false });

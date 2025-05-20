@@ -30,26 +30,17 @@ class OpenAIClient {
 	}
 
 	/**
-	 * Generate a LinkedIn post using GPT-4
+	 * Generate a LinkedIn post using GPT-4 chat completions
 	 */
 	async generatePost(
 		topic: string,
 		tone: string = "professional",
-		details: string = ""
+		details: string = "",
+		maxLength: number = 250
 	) {
-		const systemPrompt = `You are a professional LinkedIn content writer who creates engaging, insightful, and viral posts. 
-        Your posts should be:
-        1. Attention-grabbing from the first line
-        2. Formatted for easy readability with emojis and line breaks
-        3. Professional yet conversational
-        4. Include a clear call-to-action
-        5. Use 3-5 relevant hashtags`;
-
-		const userPrompt = `Create a LinkedIn post about "${topic}".
-        Tone: ${tone}
-        ${details ? `Additional Context: ${details}` : ""}
-        
-        Ensure the post follows LinkedIn best practices for engagement and uses appropriate emojis.`;
+		const prompt = `Create a LinkedIn post about "${topic}".\nTone: ${tone}${
+			details ? `\nAdditional Context: ${details}` : ""
+		}\n\nThe post should be approximately ${maxLength} words, attention-grabbing, formatted for readability and line breaks, professional yet conversational, include a clear call-to-action, and use 3-5 relevant hashtags. Ensure the post follows LinkedIn best practices for engagement.`;
 
 		const response = await this.fetchWithKey("/v1/chat/completions", {
 			method: "POST",
@@ -57,15 +48,15 @@ class OpenAIClient {
 				model: OPENAI_CONFIG.models.completion,
 				messages: [
 					{
-						role: "system",
-						content: systemPrompt,
-					},
-					{
 						role: "user",
-						content: userPrompt,
+						content: prompt,
 					},
 				],
-				...OPENAI_CONFIG.defaults.completion,
+				max_tokens: OPENAI_CONFIG.defaults.completion.max_tokens,
+				temperature: OPENAI_CONFIG.defaults.completion.temperature,
+				presence_penalty: OPENAI_CONFIG.defaults.completion.presence_penalty,
+				frequency_penalty: OPENAI_CONFIG.defaults.completion.frequency_penalty,
+				n: 1,
 			}),
 		});
 
@@ -77,10 +68,10 @@ class OpenAIClient {
 	 */
 	async generateImage(prompt: string) {
 		const enhancedPrompt = `Create a professional, high-quality image suitable for a LinkedIn post about: ${prompt}. 
-        The image should be modern, clean, and corporate-friendly while still being visually engaging.
-        Style: Professional and polished
-        Context: Business/Professional networking
-        Mood: Inspiring and sophisticated`;
+		The image should be modern, clean, and corporate-friendly while still being visually engaging.
+		Style: Professional and polished
+		Context: Business/Professional networking
+		Mood: Inspiring and sophisticated`;
 
 		const response = await this.fetchWithKey("/v1/images/generations", {
 			method: "POST",

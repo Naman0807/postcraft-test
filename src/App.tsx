@@ -19,8 +19,16 @@ import HelpPage from "@/pages/HelpPage";
 import NotFound from "@/pages/NotFound";
 import AuthPage from "@/pages/AuthPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AuthDebugger from "@/components/AuthDebugger";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			retry: 1,
+			refetchOnWindowFocus: false,
+		},
+	},
+});
 
 const App = () => (
 	<QueryClientProvider client={queryClient}>
@@ -61,6 +69,7 @@ const App = () => (
 							<Route path="*" element={<NotFound />} />
 						</Route>
 					</Routes>
+					<AuthDebugger />
 				</BrowserRouter>
 			</TooltipProvider>
 		</AppProvider>

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from "@/components/ui/slider";
 import { useAppContext } from "@/contexts/AppContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePostGeneration } from "@/integrations/openai/post-generation";
@@ -20,6 +21,7 @@ const CreatePostPage = () => {
 	const [imageLoading, setImageLoading] = useState(false);
 	const [generatedPost, setGeneratedPost] = useState("");
 	const [generatedImage, setGeneratedImage] = useState("");
+	const [postLength, setPostLength] = useState([250]);
 
 	const handleGeneratePost = async () => {
 		if (!topic) {
@@ -35,6 +37,7 @@ const CreatePostPage = () => {
 				topic,
 				tone,
 				details: industry ? `Industry context: ${industry}` : "",
+				maxLength: postLength[0],
 			});
 
 			if (postContent) {
@@ -160,6 +163,25 @@ const CreatePostPage = () => {
 											Thought Leadership
 										</option>
 									</select>
+								</div>
+
+								<div>
+									<label className="block text-sm font-medium text-foreground mb-1">
+										Post Length
+									</label>
+									<div className="space-y-3">
+										<Slider
+											value={postLength}
+											onValueChange={setPostLength}
+											min={100}
+											max={500}
+											step={50}
+											className="w-full"
+										/>
+										<div className="text-sm text-muted-foreground text-center">
+											{postLength[0]} words
+										</div>
+									</div>
 								</div>
 
 								<Tabs defaultValue="post">

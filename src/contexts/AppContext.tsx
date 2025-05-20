@@ -70,19 +70,36 @@ export function AppProvider({ children }: { children: ReactNode }) {
 		const {
 			data: { subscription },
 		} = supabase.auth.onAuthStateChange((event, session) => {
+			console.log("Auth state changed:", event, session?.user?.id);
 			setSession(session);
 			setUser(session?.user ?? null);
 
 			// If login event, fetch profile data
-			if (event === "SIGNED_IN" && session) {
+			if ((event === "SIGNED_IN" || event === "USER_UPDATED") && session) {
+				// Slight delay to ensure Supabase has processed the login
 				setTimeout(() => {
-					fetchUserProfile(session.user.id);
-				}, 0);
+					if (session.user && session.user.id) {
+						console.log(
+							"Auth event triggered profile fetch for:",
+							session.user.id
+						);
+						fetchUserProfile(session.user.id);
+					} else {
+						console.error("Session user or ID missing in auth state change");
+					}
+				}, 500);
+			} else if (event === "SIGNED_OUT") {
+				// Reset local state on logout
+				setRemainingFreePosts(3);
+				setIsSubscribed(false);
+				setSubscriptionTier(null);
+				setSubscriptionEnd(null);
 			}
 		});
 
 		// Check for existing session
 		supabase.auth.getSession().then(({ data: { session } }) => {
+			console.log("Initial session check:", session?.user?.id);
 			setSession(session);
 			setUser(session?.user ?? null);
 
@@ -96,19 +113,106 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
 	const fetchUserProfile = async (userId: string) => {
 		try {
+			console.log("Fetching profile for user:", userId);
+
+			if (!userId) {
+				console.error("fetchUserProfile called with no userId");
+				return;
+			}
+
+			// Check if there's a pending profile creation in localStorage
+			const pendingProfile = localStorage.getItem("pendingProfileCreation");
+			if (pendingProfile) {
+				try {
+					const profileData = JSON.parse(pendingProfile);
+					console.log("Found pending profile creation", profileData);
+
+					// Make sure the profile ID matches the current user
+					if (profileData.id === userId) {
+						console.log("Creating profile from pending data");
+
+						// Try to create the profile
+						const { error: insertError } = await supabase
+							.from("profiles")
+							.insert(profileData);
+
+						if (insertError) {
+							console.error(
+								"Error creating profile from pending data:",
+								insertError
+							);
+						} else {
+							console.log("Successfully created profile from pending data");
+							// Set app state
+							setRemainingFreePosts(profileData.remaining_free_posts);
+							setIsSubscribed(profileData.is_subscribed);
+
+							// Remove the pending data
+							localStorage.removeItem("pendingProfileCreation");
+
+							// We've created the profile, so we can return
+							return;
+						}
+					}
+				} catch (e) {
+					console.error("Error processing pending profile:", e);
+					localStorage.removeItem("pendingProfileCreation");
+				}
+			}
+
 			// First fetch basic profile info
 			const { data, error } = await supabase
 				.from("profiles")
-				.select("remaining_free_posts, is_subscribed")
+				.select("remaining_free_posts, is_subscribed, email, full_name")
 				.eq("id", userId)
 				.single();
 
 			if (error) {
 				console.error("Error fetching profile:", error);
+
+				// If profile doesn't exist, create a new one
+				if (error.code === "PGRST116") {
+					console.log("Profile not found in AppContext, creating new profile");
+					// Get user info for the name and email
+					const {
+						data: { user },
+					} = await supabase.auth.getUser();
+
+					if (user && user.email) {
+						console.log("Creating profile for user:", user.id, user.email);
+						// Create default profile
+						const { error: insertError } = await supabase
+							.from("profiles")
+							.insert({
+								id: userId,
+								email: user.email,
+								full_name: user.user_metadata?.full_name || "User",
+								is_subscribed: false,
+								remaining_free_posts: 3,
+							});
+
+						if (insertError) {
+							console.error(
+								"Error creating profile in AppContext:",
+								insertError
+							);
+						} else {
+							console.log("New profile created successfully in AppContext");
+							setRemainingFreePosts(3);
+							setIsSubscribed(false);
+							// New user can use the default API key for their free posts
+							console.log("New user will use default API key for free posts");
+						}
+					} else {
+						console.error("User or email not available for profile creation");
+					}
+				}
+
 				return;
 			}
 
 			if (data) {
+				console.log("Profile data found:", data);
 				setRemainingFreePosts(data.remaining_free_posts);
 				setIsSubscribed(data.is_subscribed);
 			}
@@ -150,16 +254,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
 	};
 
 	const checkApiKeyValidity = async (): Promise<boolean> => {
-		// If subscribed and no custom API key, use default key
-		if (isSubscribed && !apiKey && OPENAI_CONFIG.defaultApiKey) {
-			return true;
-		}
+		// Get the active API key (which may be the default key for eligible users)
+		const activeKey = getActiveApiKey();
 
-		// If not subscribed and no API key provided, return false
-		if (!apiKey) return false;
+		// If no API key available, return false
+		if (!activeKey) return false;
 
 		try {
-			const client = getOpenAIClient(apiKey);
+			const client = getOpenAIClient(activeKey);
 			return await client.validateApiKey();
 		} catch (error) {
 			console.error("Error validating API key:", error);
@@ -168,8 +270,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
 	};
 
 	const getActiveApiKey = (): string => {
-		// If user is subscribed and hasn't provided their own key, use the default key
-		if (isSubscribed && !apiKey && OPENAI_CONFIG.defaultApiKey) {
+		// For free users with at least 1 free post, or subscribed users
+		if ((isSubscribed || remainingFreePosts > 0) && !apiKey) {
+			// Return the default API key for eligible users who haven't provided their own key
 			return OPENAI_CONFIG.defaultApiKey;
 		}
 		// Otherwise use the user's API key
@@ -205,7 +308,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
 	};
 
 	const canGeneratePost = (): boolean => {
-		return isSubscribed || remainingFreePosts > 0;
+		// User can generate post if they are subscribed or have free posts remaining
+		// AND they have a valid API key (either their own or the default key)
+		return (
+			(isSubscribed || remainingFreePosts > 0) &&
+			(!!apiKey || !!OPENAI_CONFIG.defaultApiKey)
+		);
 	};
 
 	const signOut = async () => {
