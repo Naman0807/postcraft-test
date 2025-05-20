@@ -58,12 +58,12 @@ export default {
 					dark: "#004471",
 				},
 				postcraft: {
-					primary: "#0A66C2",
-					secondary: "#F5F5F5",
-					accent: "#0073B1",
-					background: "#FFFFFF",
-					text: "#000000",
-					border: "#E0E0E0",
+					primary: "#14b8a6", // teal-500
+					secondary: "#f1cfa0", // sand
+					accent: "#f87171", // red-400
+					background: "#fdf6e3", // sand-50
+					text: "#334155", // slate-700
+					border: "#f1cfa0", // sand (for border)
 				},
 			},
 			borderRadius: {

@@ -63,7 +63,7 @@ const PricingPage = () => {
 				<h1 className="text-3xl md:text-4xl font-bold mb-4">
 					Simple, Transparent Pricing
 				</h1>
-				<p className="text-xl text-gray-600 max-w-2xl mx-auto">
+				<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 					Choose the plan that's right for you and start creating engaging
 					LinkedIn content today.
 				</p>
@@ -75,12 +75,12 @@ const PricingPage = () => {
 					className={`border ${
 						remainingFreePosts > 0 && !isSubscribed
 							? "border-postcraft-primary shadow-md"
-							: "border-gray-200"
+							: "border-border"
 					}`}
 				>
 					<CardHeader className="text-center pb-4">
 						<h2 className="text-2xl font-bold">Free Trial</h2>
-						<p className="text-gray-600">Try before you buy</p>
+						<p className="text-muted-foreground">Try before you buy</p>
 					</CardHeader>
 					<CardContent className="text-center pb-6">
 						<div className="my-4">
@@ -125,7 +125,7 @@ const PricingPage = () => {
 					className={`border ${
 						isSubscribed && subscriptionTier === "monthly"
 							? "border-postcraft-primary shadow-md"
-							: "border-gray-200"
+							: "border-border"
 					}`}
 				>
 					<CardHeader className="text-center pb-4">
@@ -137,17 +137,17 @@ const PricingPage = () => {
 								</span>
 							)}
 						</div>
-						<p className="text-gray-600">Monthly subscription</p>
+						<p className="text-muted-foreground">Monthly subscription</p>
 					</CardHeader>
 					<CardContent className="text-center pb-6">
 						<div className="my-4">
 							<span className="text-4xl font-bold">$15</span>
-							<span className="text-gray-600 ml-1">/month</span>
+							<span className="text-muted-foreground ml-1">/month</span>
 						</div>
 						{isSubscribed &&
 							subscriptionTier === "monthly" &&
 							subscriptionEnd && (
-								<div className="mb-4 text-sm text-gray-600">
+								<div className="mb-4 text-sm text-muted-foreground">
 									<p>
 										Renews on {new Date(subscriptionEnd).toLocaleDateString()}
 									</p>
@@ -183,7 +183,7 @@ const PricingPage = () => {
 							</Button>
 						) : (
 							<Button
-								className="w-full bg-postcraft-primary hover:bg-postcraft-accent"
+								className="w-full bg-primary hover:bg-accent"
 								onClick={() => handleSubscribe("monthly")}
 								disabled={isLoading.monthly}
 							>
@@ -202,7 +202,7 @@ const PricingPage = () => {
 					className={`border ${
 						isSubscribed && subscriptionTier === "yearly"
 							? "border-postcraft-primary shadow-md"
-							: "border-gray-200"
+							: "border-border"
 					}`}
 				>
 					<CardHeader className="text-center pb-4">
@@ -214,17 +214,17 @@ const PricingPage = () => {
 								</span>
 							)}
 						</div>
-						<p className="text-gray-600">Save 17%</p>
+						<p className="text-muted-foreground">Save 17%</p>
 					</CardHeader>
 					<CardContent className="text-center pb-6">
 						<div className="my-4">
 							<span className="text-4xl font-bold">$149</span>
-							<span className="text-gray-600 ml-1">/year</span>
+							<span className="text-muted-foreground ml-1">/year</span>
 						</div>
 						{isSubscribed &&
 							subscriptionTier === "yearly" &&
 							subscriptionEnd && (
-								<div className="mb-4 text-sm text-gray-600">
+								<div className="mb-4 text-sm text-muted-foreground">
 									<p>
 										Renews on {new Date(subscriptionEnd).toLocaleDateString()}
 									</p>
@@ -262,7 +262,7 @@ const PricingPage = () => {
 							</Button>
 						) : (
 							<Button
-								className="w-full bg-postcraft-primary hover:bg-postcraft-accent"
+								className="w-full bg-primary hover:bg-accent"
 								onClick={() => handleSubscribe("yearly")}
 								disabled={isLoading.yearly}
 							>
@@ -288,7 +288,7 @@ const PricingPage = () => {
 						<h3 className="font-semibold mb-2">
 							Do I need my own OpenAI API key?
 						</h3>
-						<p className="text-gray-600">
+						<p className="text-muted-foreground">
 							Yes, PostCraft requires you to use your own OpenAI API key. This
 							ensures you have full control over your API usage and costs.
 						</p>
@@ -298,7 +298,7 @@ const PricingPage = () => {
 						<h3 className="font-semibold mb-2">
 							Can I cancel my subscription anytime?
 						</h3>
-						<p className="text-gray-600">
+						<p className="text-muted-foreground">
 							Yes, you can cancel your subscription at any time. Your access
 							will continue until the end of your current billing period.
 						</p>
@@ -308,7 +308,7 @@ const PricingPage = () => {
 						<h3 className="font-semibold mb-2">
 							How are OpenAI API costs handled?
 						</h3>
-						<p className="text-gray-600">
+						<p className="text-muted-foreground">
 							You'll be billed separately by OpenAI for your API usage.
 							PostCraft subscription only covers access to our platform
 							features.
@@ -317,7 +317,7 @@ const PricingPage = () => {
 
 					<div>
 						<h3 className="font-semibold mb-2">Do you offer refunds?</h3>
-						<p className="text-gray-600">
+						<p className="text-muted-foreground">
 							We offer a 14-day money-back guarantee if you're not satisfied
 							with your subscription.
 						</p>

@@ -66,14 +66,14 @@ const SettingsPage = () => {
 				<Card>
 					<CardContent className="p-6">
 						<h2 className="text-xl font-semibold mb-4">OpenAI API Key</h2>
-						<p className="text-sm text-gray-600 mb-4">
+						<p className="text-sm text-muted-foreground mb-4">
 							PostCraft uses OpenAI's API to generate LinkedIn posts and images.
 							You'll need to provide your own API key.
 							<a
 								href="https://platform.openai.com/account/api-keys"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-postcraft-primary hover:underline ml-1"
+								className="text-primary hover:underline ml-1"
 							>
 								Get an API key here.
 							</a>
@@ -83,7 +83,7 @@ const SettingsPage = () => {
 							<div>
 								<label
 									htmlFor="apiKey"
-									className="block text-sm font-medium text-gray-700 mb-1"
+									className="block text-sm font-medium text-foreground mb-1"
 								>
 									API Key
 								</label>
@@ -98,7 +98,7 @@ const SettingsPage = () => {
 									<button
 										type="button"
 										onClick={() => setShowApiKey(!showApiKey)}
-										className="absolute inset-y-0 right-0 flex items-center px-3 text-sm text-gray-500 hover:text-gray-700"
+										className="absolute inset-y-0 right-0 flex items-center px-3 text-sm text-gray-500 hover:text-foreground"
 									>
 										{showApiKey ? "Hide" : "Show"}
 									</button>
@@ -109,7 +109,7 @@ const SettingsPage = () => {
 								<Button
 									onClick={handleSaveKey}
 									disabled={saveLoading || !newApiKey}
-									className="bg-postcraft-primary hover:bg-postcraft-accent"
+									className="bg-primary hover:bg-accent"
 								>
 									{saveLoading ? "Saving..." : "Save API Key"}
 								</Button>
@@ -131,7 +131,7 @@ const SettingsPage = () => {
 								<div className="flex items-center justify-between">
 									<div>
 										<h3 className="font-medium">Remaining Free Posts</h3>
-										<p className="text-sm text-gray-600">
+										<p className="text-sm text-muted-foreground">
 											Posts left in your free trial
 										</p>
 									</div>
@@ -140,7 +140,7 @@ const SettingsPage = () => {
 
 								<div className="pt-2">
 									<Button
-										className="w-full bg-postcraft-primary hover:bg-postcraft-accent"
+										className="w-full bg-primary hover:bg-accent"
 										onClick={() => (window.location.href = "/pricing")}
 									>
 										Upgrade to Premium
@@ -160,7 +160,7 @@ const SettingsPage = () => {
 							<div className="flex items-center justify-between">
 								<div>
 									<h3 className="font-medium">Email Notifications</h3>
-									<p className="text-sm text-gray-600">
+									<p className="text-sm text-muted-foreground">
 										Receive updates and tips
 									</p>
 								</div>
@@ -170,7 +170,7 @@ const SettingsPage = () => {
 							<div className="flex items-center justify-between">
 								<div>
 									<h3 className="font-medium">AI Model</h3>
-									<p className="text-sm text-gray-600">
+									<p className="text-sm text-muted-foreground">
 										Default AI model to use
 									</p>
 								</div>

@@ -1,99 +1,98 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+	:root {
+		--background: 44 77% 94%; /* #fdf6e3 sand-50 */
+		--foreground: 215 19% 27%; /* #334155 slate-700 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+		--card: 44 77% 94%;
+		--card-foreground: 215 19% 27%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+		--popover: 44 77% 94%;
+		--popover-foreground: 215 19% 27%;
 
-    --primary: 210 79% 46%;
-    --primary-foreground: 0 0% 100%;
+		--primary: 172 72% 39%; /* #14b8a6 teal-500 */
+		--primary-foreground: 44 77% 94%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+		--secondary: 39 77% 78%; /* #f1cfa0 sand */
+		--secondary-foreground: 215 19% 27%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+		--muted: 39 77% 78%;
+		--muted-foreground: 215 19% 27%;
 
-    --accent: 210 79% 65%;
-    --accent-foreground: 0 0% 100%;
+		--accent: 0 91% 71%; /* #f87171 red-400 */
+		--accent-foreground: 44 77% 94%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+		--destructive: 0 91% 71%;
+		--destructive-foreground: 44 77% 94%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 210 79% 46%;
+		--border: 39 77% 78%;
+		--input: 39 77% 78%;
+		--ring: 172 72% 39%;
 
-    --radius: 0.5rem;
-  }
+		--radius: 0.5rem;
+	}
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+	.dark {
+		--background: 215 19% 27%; /* #334155 slate-700 */
+		--foreground: 44 77% 94%; /* #fdf6e3 sand-50 */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+		--card: 215 19% 27%;
+		--card-foreground: 44 77% 94%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+		--popover: 215 19% 27%;
+		--popover-foreground: 44 77% 94%;
 
-    --primary: 210 79% 46%;
-    --primary-foreground: 0 0% 100%;
+		--primary: 172 72% 39%; /* #14b8a6 teal-500 */
+		--primary-foreground: 44 77% 94%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+		--secondary: 39 77% 78%; /* #f1cfa0 sand */
+		--secondary-foreground: 215 19% 27%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+		--muted: 39 77% 78%;
+		--muted-foreground: 215 19% 27%;
 
-    --accent: 210 79% 65%;
-    --accent-foreground: 0 0% 100%;
+		--accent: 0 91% 71%; /* #f87171 red-400 */
+		--accent-foreground: 44 77% 94%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+		--destructive: 0 91% 71%;
+		--destructive-foreground: 44 77% 94%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 210 79% 65%;
-  }
+		--border: 39 77% 78%;
+		--input: 39 77% 78%;
+		--ring: 172 72% 39%;
+	}
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+	* {
+		@apply border-border;
+	}
 
-  body {
-    @apply bg-background text-foreground font-sans;
-  }
+	body {
+		@apply bg-background text-foreground font-sans;
+	}
 }
 
 .linkedin-post {
-  font-family: 'Inter', sans-serif;
-  line-height: 1.5;
+	font-family: "Inter", sans-serif;
+	line-height: 1.5;
 }
 
 .image-preview {
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
 }
 
 .post-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .post-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+	transform: translateY(-4px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }

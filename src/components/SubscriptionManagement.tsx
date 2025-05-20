@@ -95,7 +95,7 @@ const SubscriptionManagement = () => {
 			<CardContent>
 				{loadingSubscription ? (
 					<div className="flex items-center justify-center p-6">
-						<Loader className="h-6 w-6 animate-spin text-postcraft-primary mr-2" />
+						<Loader className="h-6 w-6 animate-spin text-primary mr-2" />
 						<span>Loading subscription details...</span>
 					</div>
 				) : (
@@ -119,7 +119,7 @@ const SubscriptionManagement = () => {
 							</div>
 
 							{isSubscribed && subscriptionEnd && (
-								<div className="flex items-center gap-2 text-gray-600">
+								<div className="flex items-center gap-2 text-muted-foreground">
 									<CalendarIcon className="h-4 w-4" />
 									<span className="text-sm">
 										Renews on {formatDate(subscriptionEnd)}
@@ -133,7 +133,7 @@ const SubscriptionManagement = () => {
 								<div className="space-y-4">
 									<div>
 										<p className="font-medium mb-1">Subscription Benefits</p>
-										<ul className="text-sm text-gray-600 space-y-1 list-disc pl-5">
+										<ul className="text-sm text-muted-foreground space-y-1 list-disc pl-5">
 											<li>Unlimited LinkedIn posts</li>
 											<li>Unlimited custom images</li>
 											<li>Advanced AI templates</li>
@@ -180,7 +180,7 @@ const SubscriptionManagement = () => {
 			<CardFooter className="flex flex-col sm:flex-row gap-2">
 				{!isSubscribed ? (
 					<Button
-						className="w-full sm:w-auto bg-postcraft-primary hover:bg-postcraft-accent"
+						className="w-full sm:w-auto bg-primary hover:bg-accent"
 						onClick={() => navigate("/pricing")}
 					>
 						View Plans
@@ -189,7 +189,7 @@ const SubscriptionManagement = () => {
 					<>
 						{canUpgradeToYearly && (
 							<Button
-								className="w-full sm:w-auto bg-postcraft-primary hover:bg-postcraft-accent"
+								className="w-full sm:w-auto bg-primary hover:bg-accent"
 								onClick={() => handleUpgrade("yearly")}
 								disabled={isUpgrading}
 							>
@@ -213,15 +213,15 @@ const SubscriptionManagement = () => {
 									</DialogDescription>
 								</DialogHeader>
 
-								<div className="bg-gray-50 p-4 rounded-md my-4">
+								<div className="text-background p-4 rounded-md my-4">
 									<div className="flex items-center gap-2 mb-2">
-										<CreditCard className="h-5 w-5 text-gray-600" />
+										<CreditCard className="h-5 w-5 text-muted-foreground" />
 										<p className="font-medium">Your subscription details</p>
 									</div>
-									<p className="text-sm text-gray-600">
+									<p className="text-sm text-muted-foreground">
 										Plan: {formatTierName(subscriptionTier)}
 									</p>
-									<p className="text-sm text-gray-600">
+									<p className="text-sm text-muted-foreground">
 										Active until: {formatDate(subscriptionEnd)}
 									</p>
 								</div>

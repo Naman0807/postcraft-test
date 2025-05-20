@@ -54,13 +54,15 @@ const PaymentSuccessPage = () => {
 				<CardContent className="text-center">
 					{isLoading ? (
 						<div className="flex flex-col items-center justify-center p-8">
-							<Loader className="h-12 w-12 animate-spin text-postcraft-primary mb-4" />
-							<p className="text-gray-600">Validating your payment...</p>
+							<Loader className="h-12 w-12 animate-spin text-primary mb-4" />
+							<p className="text-muted-foreground">
+								Validating your payment...
+							</p>
 						</div>
 					) : error ? (
 						<div className="p-8">
 							<p className="text-red-500 mb-4">{error}</p>
-							<p className="text-gray-600">
+							<p className="text-muted-foreground">
 								There was a problem processing your payment. Please try again or
 								contact support if the issue persists.
 							</p>
@@ -75,13 +77,13 @@ const PaymentSuccessPage = () => {
 								Thank You For Subscribing!
 							</h2>
 
-							<p className="text-gray-600 mb-6">
+							<p className="text-muted-foreground mb-6">
 								Your subscription to PostCraft Premium has been activated
 								successfully. You now have unlimited access to all premium
 								features.
 							</p>
 
-							<div className="bg-gray-50 rounded-lg p-4 mb-6">
+							<div className="text-background rounded-lg p-4 mb-6">
 								<h3 className="font-semibold mb-2">What's Next?</h3>
 								<ul className="text-left space-y-2">
 									<li className="flex items-start">
@@ -104,7 +106,7 @@ const PaymentSuccessPage = () => {
 
 				<CardFooter className="flex justify-center">
 					<Button
-						className="bg-postcraft-primary hover:bg-postcraft-accent"
+						className="bg-primary hover:bg-accent"
 						onClick={() => navigate("/create")}
 						disabled={isLoading || !!error}
 					>

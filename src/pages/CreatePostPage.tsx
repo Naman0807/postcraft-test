@@ -112,7 +112,7 @@ const CreatePostPage = () => {
 								<div>
 									<label
 										htmlFor="topic"
-										className="block text-sm font-medium text-gray-700 mb-1"
+										className="block text-sm font-medium text-foreground mb-1"
 									>
 										Topic or Main Idea *
 									</label>
@@ -127,7 +127,7 @@ const CreatePostPage = () => {
 								<div>
 									<label
 										htmlFor="industry"
-										className="block text-sm font-medium text-gray-700 mb-1"
+										className="block text-sm font-medium text-foreground mb-1"
 									>
 										Industry (Optional)
 									</label>
@@ -142,7 +142,7 @@ const CreatePostPage = () => {
 								<div>
 									<label
 										htmlFor="tone"
-										className="block text-sm font-medium text-gray-700 mb-1"
+										className="block text-sm font-medium text-foreground mb-1"
 									>
 										Tone
 									</label>
@@ -172,7 +172,7 @@ const CreatePostPage = () => {
 										<Button
 											onClick={handleGeneratePost}
 											disabled={loading || !topic}
-											className="w-full bg-postcraft-primary hover:bg-postcraft-accent"
+											className="w-full bg-primary hover:bg-accent"
 										>
 											{loading ? "Generating..." : "Generate LinkedIn Post"}
 										</Button>
@@ -182,7 +182,7 @@ const CreatePostPage = () => {
 										<Button
 											onClick={handleGenerateImage}
 											disabled={imageLoading || !topic}
-											className="w-full bg-postcraft-primary hover:bg-postcraft-accent"
+											className="w-full bg-primary hover:bg-accent"
 										>
 											{imageLoading ? "Generating..." : "Generate Post Image"}
 										</Button>
@@ -244,7 +244,7 @@ const CreatePostPage = () => {
 											download="linkedin-post-image.jpg"
 											target="_blank"
 											rel="noopener noreferrer"
-											className="text-sm text-postcraft-primary hover:underline"
+											className="text-sm text-primary hover:underline"
 										>
 											Download Image
 										</a>
@@ -265,7 +265,7 @@ const CreatePostPage = () => {
 					<Card>
 						<CardContent className="p-4">
 							<h3 className="font-medium mb-2">Start with a Hook</h3>
-							<p className="text-sm text-gray-600">
+							<p className="text-sm text-muted-foreground">
 								Begin your post with an attention-grabbing first line that makes
 								readers want to click "see more".
 							</p>
@@ -275,7 +275,7 @@ const CreatePostPage = () => {
 					<Card>
 						<CardContent className="p-4">
 							<h3 className="font-medium mb-2">Use Short Paragraphs</h3>
-							<p className="text-sm text-gray-600">
+							<p className="text-sm text-muted-foreground">
 								Break up your text into 1-2 sentence paragraphs for better
 								readability on mobile devices.
 							</p>
@@ -285,7 +285,7 @@ const CreatePostPage = () => {
 					<Card>
 						<CardContent className="p-4">
 							<h3 className="font-medium mb-2">Include a Call to Action</h3>
-							<p className="text-sm text-gray-600">
+							<p className="text-sm text-muted-foreground">
 								End with a question or invitation for comments to boost
 								engagement with your post.
 							</p>
