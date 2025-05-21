@@ -44,6 +44,10 @@ export default {
 					DEFAULT: "hsl(var(--accent))",
 					foreground: "hsl(var(--accent-foreground))",
 				},
+				success: {
+					DEFAULT: "hsl(var(--success))",
+					foreground: "hsl(var(--success-foreground))",
+				},
 				popover: {
 					DEFAULT: "hsl(var(--popover))",
 					foreground: "hsl(var(--popover-foreground))",
@@ -52,18 +56,16 @@ export default {
 					DEFAULT: "hsl(var(--card))",
 					foreground: "hsl(var(--card-foreground))",
 				},
-				linkedin: {
-					DEFAULT: "#0077B5",
-					light: "#00A0DC",
-					dark: "#004471",
-				},
-				postcraft: {
-					primary: "#14b8a6", // teal-500
-					secondary: "#f1cfa0", // sand
-					accent: "#f87171", // red-400
-					background: "#fdf6e3", // sand-50
-					text: "#334155", // slate-700
-					border: "#f1cfa0", // sand (for border)
+				// Custom brand colors
+				brand: {
+					primary: "#4A90E2", // Vibrant Blue
+					secondary: "#50C878", // Emerald Green
+					background: "#F8F9FA", // Light Gray
+					text: "#2D3436", // Dark Gray
+					border: "#E2E8F0", // Soft Gray
+					accent: "#FF6B6B", // Coral Red
+					warning: "#FFC107", // Amber
+					success: "#28A745", // Forest Green
 				},
 			},
 			borderRadius: {
@@ -73,20 +75,12 @@ export default {
 			},
 			keyframes: {
 				"accordion-down": {
-					from: {
-						height: "0",
-					},
-					to: {
-						height: "var(--radix-accordion-content-height)",
-					},
+					from: { height: "0" },
+					to: { height: "var(--radix-accordion-content-height)" },
 				},
 				"accordion-up": {
-					from: {
-						height: "var(--radix-accordion-content-height)",
-					},
-					to: {
-						height: "0",
-					},
+					from: { height: "var(--radix-accordion-content-height)" },
+					to: { height: "0" },
 				},
 				"fade-in": {
 					"0%": { opacity: "0" },
