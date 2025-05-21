@@ -6,14 +6,18 @@ import { Switch } from "@/components/ui/switch";
 import { useAppContext } from "@/contexts/AppContext";
 import { useToast } from "@/components/ui/use-toast";
 import SubscriptionManagement from "@/components/SubscriptionManagement";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const SettingsPage = () => {
 	const { apiKey, setApiKey, remainingFreePosts, isSubscribed } =
 		useAppContext();
 	const { toast } = useToast();
+	const navigate = useNavigate();
 	const [newApiKey, setNewApiKey] = useState(apiKey);
 	const [showApiKey, setShowApiKey] = useState(false);
 	const [saveLoading, setSaveLoading] = useState(false);
+	const [logoutLoading, setLogoutLoading] = useState(false);
 
 	const handleSaveKey = async () => {
 		if (!newApiKey) {
@@ -47,6 +51,22 @@ const SettingsPage = () => {
 			toast.error("Error", {
 				description: "Failed to save API key. Please try again.",
 			});
+		}
+	};
+
+	const handleLogout = async () => {
+		try {
+			setLogoutLoading(true);
+			const { error } = await supabase.auth.signOut();
+			if (error) throw error;
+
+			toast.success("Logged out successfully");
+			navigate("/auth");
+		} catch (error: any) {
+			console.error("Logout error:", error);
+			toast.error(error.message || "An error occurred during logout");
+		} finally {
+			setLogoutLoading(false);
 		}
 	};
 
@@ -176,6 +196,24 @@ const SettingsPage = () => {
 								</select>
 							</div>
 						</div>
+					</CardContent>
+				</Card>
+
+				{/* Logout Section */}
+				<Card>
+					<CardContent className="p-6">
+						<h2 className="text-xl font-semibold mb-4">Account</h2>
+						<p className="text-sm text-muted-foreground mb-4">
+							Manage your account settings and session.
+						</p>
+						<Button
+							variant="destructive"
+							onClick={handleLogout}
+							disabled={logoutLoading}
+							className="w-full sm:w-auto"
+						>
+							{logoutLoading ? "Logging out..." : "Logout"}
+						</Button>
 					</CardContent>
 				</Card>
 			</div>

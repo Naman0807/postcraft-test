@@ -38,7 +38,6 @@ const AuthPage = () => {
 
 		checkSession();
 	}, [navigate]);
-
 	const handleSignUp = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!email || !password || !fullName) {
@@ -61,44 +60,39 @@ const AuthPage = () => {
 			});
 			if (error) throw error;
 
-			console.log("Sign up successful, user ID:", data?.user?.id); // Create a new profile for the user
+			console.log("Sign up successful, user ID:", data?.user?.id);
+
 			if (data?.user) {
 				try {
-					console.log("Creating profile for new user:", data.user.id);
+					// Create profile immediately since email confirmation is disabled
+					const { error: profileError } = await supabase
+						.from("profiles")
+						.insert({
+							id: data.user.id,
+							email: email,
+							full_name: fullName,
+							is_subscribed: false,
+							remaining_free_posts: 3,
+						});
 
-					// Handle profile creation in the client
-					// Since we need to wait for the login process to complete
-					// before we can create the profile
-					setTimeout(() => {
-						// Store profile data in local storage temporarily
-						localStorage.setItem(
-							"pendingProfileCreation",
-							JSON.stringify({
-								id: data.user.id,
-								email: email,
-								full_name: fullName,
-								is_subscribed: false,
-								remaining_free_posts: 3,
-							})
-						);
-
-						console.log("Profile data stored for later creation");
-					}, 500);
-				} catch (profileCreationError) {
-					console.error(
-						"Profile creation preparation failed:",
-						profileCreationError
-					);
+					if (profileError) {
+						console.error("Profile creation error:", profileError);
+					} else {
+						console.log("Profile created successfully");
+						setIsSubscribed(false);
+						setRemainingFreePosts(3);
+					}
+				} catch (profileError) {
+					console.error("Profile creation error:", profileError);
 				}
 			}
+
 			toast.success("Registration successful!", {
-				description: "Please check your email to confirm your account.",
+				description: "You can now sign in with your email and password.",
 			});
 
-			// If auto-confirm is enabled (for development), navigate to the login tab
+			// Since email confirmation is disabled, user should be automatically logged in
 			if (data?.session) {
-				setIsSubscribed(false);
-				setRemainingFreePosts(3);
 				navigate("/");
 			}
 		} catch (error: any) {
