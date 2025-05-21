@@ -2,7 +2,7 @@ export const OPENAI_CONFIG = {
 	// use local dev proxy when running `vite dev`
 	baseUrl: import.meta.env.DEV ? "" : "https://api.openai.com/v1",
 	models: {
-		completion: "gpt-4",
+		completion: "gpt-4o-mini",
 		image: "dall-e-3",
 	},
 	defaults: {

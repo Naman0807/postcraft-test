@@ -51,6 +51,7 @@ const Header = () => {
 	const navigationLinks = [
 		{ path: "/", label: "Home" },
 		{ path: "/create", label: "Create Post" },
+		{ path: "/reading-history", label: "Reading History" },
 		{ path: "/settings", label: "Settings" },
 	];
 

@@ -165,7 +165,7 @@ const SettingsPage = () => {
 				)}
 
 				{/* Preferences */}
-				<Card>
+				{/* <Card>
 					<CardContent className="p-6">
 						<h2 className="text-xl font-semibold mb-4">Preferences</h2>
 
@@ -197,7 +197,7 @@ const SettingsPage = () => {
 							</div>
 						</div>
 					</CardContent>
-				</Card>
+				</Card> */}
 
 				{/* Logout Section */}
 				<Card>

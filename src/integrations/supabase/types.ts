@@ -85,6 +85,74 @@ export type Database = {
 					}
 				];
 			};
+			posts: {
+				Row: {
+					id: string;
+					created_at: string;
+					title: string;
+					content: string;
+					author_id: string;
+					published: boolean;
+				};
+				Insert: {
+					id?: string;
+					created_at?: string;
+					title: string;
+					content: string;
+					author_id: string;
+					published?: boolean;
+				};
+				Update: {
+					id?: string;
+					created_at?: string;
+					title?: string;
+					content?: string;
+					author_id?: string;
+					published?: boolean;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "posts_author_id_fkey";
+						columns: ["author_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					}
+				];
+			};
+			reading_history: {
+				Row: {
+					id: string;
+					user_id: string;
+					post_id: string;
+					created_at: string;
+				};
+				Insert: {
+					id?: string;
+					user_id: string;
+					post_id: string;
+					created_at?: string;
+				};
+				Update: {
+					id?: string;
+					user_id?: string;
+					post_id?: string;
+					created_at?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "reading_history_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "reading_history_post_id_fkey";
+						columns: ["post_id"];
+						referencedRelation: "posts";
+						referencedColumns: ["id"];
+					}
+				];
+			};
 		};
 		Views: {
 			[_ in never]: never;

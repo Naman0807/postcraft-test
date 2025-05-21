@@ -9,10 +9,13 @@ import { Slider } from "@/components/ui/slider";
 import { useAppContext } from "@/contexts/AppContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePostGeneration } from "@/integrations/openai/post-generation";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const CreatePostPage = () => {
-	const { apiKey } = useAppContext();
+	const { apiKey, user } = useAppContext();
 	const { generatePost, generateImage } = usePostGeneration();
+	const navigate = useNavigate();
 
 	const [topic, setTopic] = useState("");
 	const [tone, setTone] = useState("professional");
@@ -41,10 +44,35 @@ const CreatePostPage = () => {
 			});
 
 			if (postContent) {
-				setGeneratedPost(postContent);
-				toast.success("Your LinkedIn post has been successfully created!", {
-					description: "Post Generated",
-				});
+				// Save the post to Supabase
+				const success = await savePost(postContent, topic);
+
+				if (success) {
+					setGeneratedPost(postContent);
+					toast.success("Your LinkedIn post has been created and saved!", {
+						description: "Post Generated",
+					});
+
+					// Fetch the newly created post to get its ID
+					const { data: newPost } = await supabase
+						.from("posts")
+						.select("id")
+						.eq("author_id", user?.id)
+						.eq("title", topic)
+						.order("created_at", { ascending: false })
+						.limit(1)
+						.single();
+
+					if (newPost) {
+						// Add to reading history
+						await addToReadingHistory(newPost.id);
+					}
+				} else {
+					setGeneratedPost(postContent);
+					toast.error("Post was generated but couldn't be saved", {
+						description: "You can still copy the content",
+					});
+				}
 			}
 		} catch (error) {
 			console.error("Error generating post:", error);
@@ -99,6 +127,56 @@ const CreatePostPage = () => {
 		toast.success("Your post has been copied to clipboard.", {
 			description: "Copied to clipboard",
 		});
+	};
+
+	// Function to save post to Supabase
+	const savePost = async (content: string, title: string) => {
+		if (!user) {
+			toast.error("Please sign in to save posts", {
+				description: "Authentication Required",
+			});
+			navigate("/auth");
+			return false;
+		}
+
+		try {
+			const { data, error } = await supabase.from("posts").insert({
+				title: title,
+				content: content,
+				author_id: user.id,
+				published: true,
+				image_url: generatedImage,
+			});
+
+			if (error) {
+				throw error;
+			}
+
+			return true;
+		} catch (error) {
+			console.error("Error saving post:", error);
+			toast.error("Failed to save your post", {
+				description:
+					error instanceof Error ? error.message : "Please try again",
+			});
+			return false;
+		}
+	};
+
+	// Function to save post to reading history
+	const addToReadingHistory = async (postId: string) => {
+		if (!user) return;
+
+		try {
+			const { error } = await supabase.from("reading_history").insert({
+				user_id: user.id,
+				post_id: postId,
+			});
+
+			if (error) throw error;
+		} catch (error) {
+			console.error("Error adding to reading history:", error);
+		}
 	};
 
 	return (
