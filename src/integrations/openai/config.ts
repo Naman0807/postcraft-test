@@ -14,7 +14,7 @@ export const OPENAI_CONFIG = {
 		},
 		image: {
 			size: "1024x1024",
-			quality: "standard",
+			quality: "auto",
 			style: "natural",
 		},
 	},
