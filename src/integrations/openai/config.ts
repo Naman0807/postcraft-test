@@ -14,8 +14,6 @@ export const OPENAI_CONFIG = {
 		},
 		image: {
 			size: "1024x1024",
-			quality: "auto",
-			style: "natural",
 		},
 	},
 	defaultApiKey: import.meta.env.VITE_DEFAULT_OPENAI_API_KEY || "",
